@@ -14,6 +14,35 @@ function saveData(key, data) {
 }
 
 /**
+ * Récupère l'objectif financier d'un membre en fonction de son sexe.
+ * @param {string} sexe - 'M' ou 'F'
+ * @returns {number} Le montant de l'objectif en FCFA
+ */
+function getObjectifMembre(sexe) {
+    const objectifs = getData('objectifs') || { homme: 120000, femme: 60000 };
+    
+    if (sexe && sexe.toUpperCase() === 'M') {
+        return objectifs.homme;
+    } else {
+        return objectifs.femme; // Par défaut ou 'F'
+    }
+}
+
+/**
+ * Met à jour les montants des objectifs par le responsable.
+ * @param {number} newHomme
+ * @param {number} newFemme
+ */
+function modifierObjectifs(newHomme, newFemme) {
+    const nouveauxObjectifs = {
+        homme: Number(newHomme),
+        femme: Number(newFemme)
+    };
+    saveData('objectifs', nouveauxObjectifs);
+    alert("Objectifs annuels mis à jour avec succès !");
+}
+
+/**
  * Initialise les données de démonstration au premier lancement si elles n'existent pas.
  */
 function initDemoData() {
