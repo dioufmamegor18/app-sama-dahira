@@ -71,13 +71,97 @@
     <section id="cotisations-section" class="app-section" style="display: none;">
         <div class="container">
             <h2>Gestion des Cotisations</h2>
+
+            <div style="margin: 20px 0;">
+                <button class="btn-primary" onclick="ouvrirModalCotisation()" style="background-color: #d4af37; color: #1b4d3e; font-size: 18px; padding: 15px 30px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    💰 ENREGISTRER UNE COTISATION
+                </button>
+            </div>
+
+            <div id="modal-cotisation" style="display: none; background: white; padding: 25px; border-radius: 8px; margin-bottom: 30px; border: 2px solid #1b4d3e;">
+                <h3>Nouvelle Cotisation (Session active automatique)</h3>
+                <form id="form-cotisation" onsubmit="enregistrerCotisation(event)" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label for="cotisation-membre">Membre (Recherche par Matricule, Nom ou Prénom)</label>
+                        <select id="cotisation-membre" required class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cotisation-caisse">Caisse</label>
+                        <select id="cotisation-caisse" required class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cotisation-montant">Montant (FCFA)</label>
+                        <input type="number" id="cotisation-montant" required min="100" placeholder="ex: 5000">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn-primary">Valider la cotisation</button>
+                        <button type="button" onclick="fermerModalCotisation()" style="padding: 12px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer;">Annuler</button>
+                    </div>
+                </form>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3>Historique des Cotisations</h3>
+                <div class="table-responsive" style="margin-top: 15px;">
+                    <table class="data-table" border="1" cellpadding="10" cellspacing="0" style="width: 100%; background: white;">
+                        <thead>
+                            <tr>
+                                <th>Date & Heure</th>
+                                <th>Matricule - Membre</th>
+                                <th>Caisse</th>
+                                <th>Montant</th>
+                                <th>Session</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="liste-cotisations-tbody">
+                            <!-- Rempli par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- 5. SECTION CAISSES -->
-    <section id="caisses-section" class="app-section" style="display: none;">
+    <section id="caisses-section" class="app-section">
         <div class="container">
             <h2>Gestion des Caisses</h2>
+            <p>Les soldes sont calculés automatiquement en fonction des cotisations perçues et des dépenses effectuées.</p>
+
+            <div class="form-card" style="margin-top: 20px; background: white; padding: 20px; border-radius: 8px;">
+                <h3>Créer une nouvelle caisse</h3>
+                <form id="form-caisse" onsubmit="ajouterCaisse(event)" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label for="caisse-nom">Nom de la caisse (ex: Caisse Ziara)</label>
+                        <input type="text" id="caisse-nom" required placeholder="Nom de la caisse">
+                    </div>
+                    <div class="form-group">
+                        <label for="caisse-desc">Description</label>
+                        <input type="text" id="caisse-desc" placeholder="Description de la caisse">
+                    </div>
+                    <button type="submit" class="btn-primary">Créer la caisse</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3>Liste des Caisses et Soldes</h3>
+                <div class="table-responsive" style="margin-top: 15px;">
+                    <table class="data-table" border="1" cellpadding="10" cellspacing="0" style="width: 100%; background: white;">
+                        <thead>
+                            <tr>
+                                <th>Nom de la Caisse</th>
+                                <th>Description</th>
+                                <th>Solde Actuel</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="liste-caisses-tbody">
+                            <!-- Rempli par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -161,6 +245,7 @@
     <script src="js/auth.js"></script>
     <script src="js/membres.js"></script>
     <script src="js/cotisations.js"></script>
+    <script src="js/caisses.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/sessions.js"></script>
     <script src="js/app.js"></script>
