@@ -1,14 +1,109 @@
-/* Styles globaux de SAMA DAHIRA. */
-:root {
-  font-family: Arial, sans-serif;
-  color: #1f2937;
-  background: #f8fafc;
+/* --- RESET & VARIABLES DE BASE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
+:root {
+    --primary-color: #1b4d3e; /* Vert élégant, adapté à un Dahira */
+    --primary-hover: #143a2f;
+    --accent-color: #d4af37;  /* Doré subtil */
+    --bg-color: #f8f9fa;
+    --text-color: #333333;
+    --white: #ffffff;
+    --gray-light: #e9ecef;
+    --danger-color: #dc3545;
 }
 
 body {
-  margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* --- CLASSES D'AFFICHAGE DES SECTIONS --- */
+.app-section {
+    display: none; /* Par défaut, toutes les sections sont masquées */
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.app-section.active {
+    display: block; /* Seule la section active s'affiche */
+}
+
+/* --- DESIGN DE LA SECTION CONNEXION --- */
+#connexion-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--primary-color), #0d231c);
+}
+
+.login-container {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-container h1 {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    font-size: 26px;
+}
+
+.login-container p {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #444;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
 }
