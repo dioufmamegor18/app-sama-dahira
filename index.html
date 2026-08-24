@@ -1,15 +1,86 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SAMA DAHIRA</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sama Dahira - Gestion Simplifiée</title>
+    <!-- Lien vers le fichier CSS global -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <main id="app">
-    <h1>SAMA DAHIRA</h1>
-  </main>
-  <script type="module" src="js/app.js"></script>
+
+    <!-- 1. SECTION CONNEXION -->
+    <section id="connexion-section" class="app-section">
+        <div class="login-container">
+            <h1>SAMA DAHIRA</h1>
+            <p>Plateforme de gestion du Dahira</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-identifier">Email (Responsable) ou Matricule (Membre)</label>
+                    <input type="text" id="login-identifier" required placeholder="ex: admin@samadahira.com ou DT00001">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Mot de passe</label>
+                    <input type="password" id="login-password" required placeholder="Mot de passe">
+                </div>
+                <button type="submit" class="btn-primary">Se connecter</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- 2. SECTION DASHBOARD -->
+    <section id="dashboard-section" class="app-section" style="display: none;">
+        <h2>Tableau de bord</h2>
+        <p>Bienvenue sur le dashboard de gestion.</p>
+        <!-- Le contenu sera injecté dynamiquement par JavaScript -->
+    </section>
+
+    <!-- 3. SECTION MEMBRES -->
+    <section id="membres-section" class="app-section" style="display: none;">
+        <h2>Gestion des Membres</h2>
+    </section>
+
+    <!-- 4. SECTION COTISATIONS -->
+    <section id="cotisations-section" class="app-section" style="display: none;">
+        <h2>Gestion des Cotisations</h2>
+    </section>
+
+    <!-- 5. SECTION CAISSES -->
+    <section id="caisses-section" class="app-section" style="display: none;">
+        <h2>Gestion des Caisses</h2>
+    </section>
+
+    <!-- 6. SECTION SESSIONS -->
+    <section id="sessions-section" class="app-section" style="display: none;">
+        <h2>Gestion des Sessions</h2>
+    </section>
+
+    <!-- 7. SECTION DÉPENSES -->
+    <section id="depenses-section" class="app-section" style="display: none;">
+        <h2>Gestion des Dépenses</h2>
+    </section>
+
+    <!-- 8. SECTION ZIARA -->
+    <section id="ziara-section" class="app-section" style="display: none;">
+        <h2>Gestion des Ziara</h2>
+    </section>
+
+    <!-- 9. ÉVÉNEMENTS -->
+    <section id="evenements-section" class="app-section" style="display: none;">
+        <h2>Gestion des Événements</h2>
+    </section>
+
+    <!-- 10. ESPACE MEMBRE -->
+    <section id="espace-membre-section" class="app-section" style="display: none;">
+        <h2>Mon Espace Membre</h2>
+    </section>
+
+    <!-- Inclusion des scripts JS modulaires (chargés à la fin du body) -->
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/membres.js"></script>
+    <script src="js/cotisations.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
