@@ -28,6 +28,66 @@ function ouvrirModalCotisation() {
 	});
 }
 
+/**
+ * Vérifie si une cotisation peut encore être modifiée (moins d'une heure).
+ * @param {object} cotisation - L'objet cotisation
+ * @returns {boolean} True si modifiable, false sinon
+ */
+function estCotisationModifiable(cotisation) {
+	const heureCreation = cotisation.id;
+	const maintenant = Date.now();
+	const uneHeureEnMs = 60 * 60 * 1000;
+	const difference = maintenant - heureCreation;
+
+	return difference >= 0 && difference <= uneHeureEnMs;
+}
+
+/**
+ * Modifie une cotisation existante si le délai d'une heure n'est pas dépassé.
+ * @param {number} idCotisation - L'ID de la cotisation
+ * @param {number} nouveauMontant - Le nouveau montant saisi
+ */
+function modifierCotisation(idCotisation, nouveauMontant) {
+	let cotisations = getData('cotisations') || [];
+	const index = cotisations.findIndex(cotisation => cotisation.id === idCotisation);
+
+	if (index === -1) {
+		alert('Cotisation introuvable.');
+		return;
+	}
+
+	const cotisation = cotisations[index];
+
+	if (!estCotisationModifiable(cotisation)) {
+		alert("MODIFICATION VERROUILLÉE : Le délai d'une heure après l'enregistrement est dépassé.");
+		return;
+	}
+
+	const currentUser = sessionStorage.getItem('currentUser')
+		? JSON.parse(sessionStorage.getItem('currentUser'))
+		: { nomComplet: 'Administrateur' };
+	const now = new Date();
+
+	if (!cotisation.historiqueModifications) {
+		cotisation.historiqueModifications = [];
+	}
+
+	cotisation.historiqueModifications.push({
+		ancienMontant: cotisation.montant,
+		nouveauMontant: Number(nouveauMontant),
+		modifiePar: currentUser.nomComplet,
+		dateModification: now.toISOString().split('T')[0],
+		heureModification: now.toTimeString().split(' ')[0].substring(0, 5)
+	});
+
+	cotisation.montant = Number(nouveauMontant);
+	cotisations[index] = cotisation;
+	saveData('cotisations', cotisations);
+
+	afficherCotisations();
+	alert('Cotisation modifiée avec succès. La modification a été tracée.');
+}
+
 function fermerModalCotisation() {
 	const modal = document.getElementById('modal-cotisation');
 	if (modal) modal.style.display = 'none';
