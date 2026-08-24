@@ -297,6 +297,60 @@
     <section id="ziara-section" class="app-section" style="display: none;">
         <div class="container">
             <h2>Gestion des Ziara</h2>
+            <p>Enregistrez les visites pieuses en distinguant les frais de déplacement et le montant remis.</p>
+
+            <div class="form-card" style="margin-top: 20px; background: white; padding: 25px; border-radius: 8px;">
+                <h3>Enregistrer une Ziara</h3>
+                <form id="form-ziara" onsubmit="enregistrerZiara(event)" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label for="ziara-date">Date de la visite</label>
+                        <input type="date" id="ziara-date" required style="width: 100%; padding: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="ziara-lieu">Lieu</label>
+                        <input type="text" id="ziara-lieu" required placeholder="ex: Touba, Darou Mousty..." style="width: 100%; padding: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="ziara-personne">Personne visitée / Guide</label>
+                        <input type="text" id="ziara-personne" required placeholder="ex: Serigne Mame Mor Mbacké..." style="width: 100%; padding: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="ziara-deplacement">Frais de déplacement (FCFA)</label>
+                        <input type="number" id="ziara-deplacement" required min="0" placeholder="ex: 25000" style="width: 100%; padding: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="ziara-remise">Montant remis / Hadaya (FCFA)</label>
+                        <input type="number" id="ziara-remise" required min="0" placeholder="ex: 100000" style="width: 100%; padding: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="ziara-caisse">Caisse débitée</label>
+                        <select id="ziara-caisse" required class="form-control" style="width: 100%; padding: 10px;"></select>
+                    </div>
+                    <button type="submit" class="btn-primary" style="background-color: #1b4d3e;">Enregistrer la Ziara</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3>Historique des Ziara</h3>
+                <div class="table-responsive" style="margin-top: 15px;">
+                    <table class="data-table" border="1" cellpadding="10" cellspacing="0" style="width: 100%; background: white;">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Lieu & Personne</th>
+                                <th>Frais Déplacement</th>
+                                <th>Montant Remis</th>
+                                <th>Total Sortie</th>
+                                <th>Caisse</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="liste-ziaras-tbody">
+                            <!-- Rempli par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -321,6 +375,7 @@
     <script src="js/cotisations.js"></script>
     <script src="js/caisses.js"></script>
     <script src="js/depenses.js"></script>
+    <script src="js/ziara.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/sessions.js"></script>
     <script src="js/app.js"></script>
