@@ -85,6 +85,46 @@
     <section id="sessions-section" class="app-section" style="display: none;">
         <div class="container">
             <h2>Gestion des Sessions</h2>
+            <p>Une seule session peut être active à la fois. Elle est utilisée automatiquement pour les cotisations.</p>
+            
+            <div class="form-card" style="margin-top: 20px; background: white; padding: 20px; border-radius: 8px;">
+                <h3>Créer une nouvelle session</h3>
+                <form id="form-session" onsubmit="ajouterSession(event)" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label for="session-nom">Nom de la session (ex: Session 2027)</label>
+                        <input type="text" id="session-nom" required placeholder="Nom de la session">
+                    </div>
+                    <div class="form-group">
+                        <label for="session-debut">Date d'ouverture</label>
+                        <input type="date" id="session-debut" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="session-fin">Date de fermeture</label>
+                        <input type="date" id="session-fin" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Créer et activer</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3>Sessions enregistrées</h3>
+                <div class="table-responsive" style="margin-top: 15px;">
+                    <table class="data-table" border="1" cellpadding="10" cellspacing="0" style="width: 100%; background: white;">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Ouverture</th>
+                                <th>Fermeture</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="liste-sessions-tbody">
+                            <!-- Rempli par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -122,6 +162,7 @@
     <script src="js/membres.js"></script>
     <script src="js/cotisations.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/sessions.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

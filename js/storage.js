@@ -1,4 +1,19 @@
 /**
+ * Récupère une donnée stockée dans le LocalStorage.
+ */
+function getData(key) {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
+}
+
+/**
+ * Enregistre une donnée dans le LocalStorage.
+ */
+function saveData(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
+/**
  * Initialise les données de démonstration au premier lancement si elles n'existent pas.
  */
 function initDemoData() {
