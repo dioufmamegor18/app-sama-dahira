@@ -88,6 +88,72 @@ function modifierCotisation(idCotisation, nouveauMontant) {
 	alert('Cotisation modifiée avec succès. La modification a été tracée.');
 }
 
+/**
+ * Initialise les listes déroulantes du module de saisie rapide.
+ */
+function initSaisieRapideSelects() {
+	const selectMembre = document.getElementById('rapide-membre');
+	const selectCaisse = document.getElementById('rapide-caisse');
+
+	if (!selectMembre || !selectCaisse) return;
+
+	const membres = getData('membres') || [];
+	selectMembre.innerHTML = '<option value="">-- Choisir membre --</option>';
+	membres.forEach(membre => {
+		selectMembre.innerHTML += `<option value="${membre.matricule}">${membre.matricule} - ${membre.nom} ${membre.prenom}</option>`;
+	});
+
+	const caisses = getData('caisses') || [];
+	selectCaisse.innerHTML = '<option value="">-- Choisir caisse --</option>';
+	caisses.forEach(caisse => {
+		selectCaisse.innerHTML += `<option value="${caisse.nom}">${caisse.nom}</option>`;
+	});
+}
+
+/**
+ * Enregistre une cotisation depuis le formulaire de saisie rapide.
+ */
+function enregistrerSaisieRapide(e) {
+	e.preventDefault();
+
+	const matriculeMembre = document.getElementById('rapide-membre').value;
+	const nomCaisse = document.getElementById('rapide-caisse').value;
+	const montant = Number(document.getElementById('rapide-montant').value);
+	const sessionActive = typeof getActiveSession === 'function' ? getActiveSession() : null;
+
+	if (!sessionActive) {
+		alert('Erreur : Aucune session active trouvée.');
+		return;
+	}
+
+	const currentUser = sessionStorage.getItem('currentUser')
+		? JSON.parse(sessionStorage.getItem('currentUser'))
+		: { nomComplet: 'Administrateur' };
+	const now = new Date();
+	const nouvelleCotisation = {
+		id: Date.now(),
+		matriculeMembre,
+		caisse: nomCaisse,
+		montant,
+		date: now.toISOString().split('T')[0],
+		heure: now.toTimeString().split(' ')[0].substring(0, 5),
+		session: sessionActive.nom,
+		responsable: currentUser.nomComplet
+	};
+
+	const cotisations = getData('cotisations') || [];
+	cotisations.push(nouvelleCotisation);
+	saveData('cotisations', cotisations);
+
+	document.getElementById('rapide-montant').value = '';
+	afficherCotisations();
+	console.log(`Saisie rapide réussie pour ${matriculeMembre}`);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+	initSaisieRapideSelects();
+});
+
 function fermerModalCotisation() {
 	const modal = document.getElementById('modal-cotisation');
 	if (modal) modal.style.display = 'none';
