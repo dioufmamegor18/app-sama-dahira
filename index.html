@@ -237,6 +237,59 @@
     <section id="depenses-section" class="app-section" style="display: none;">
         <div class="container">
             <h2>Gestion des Dépenses</h2>
+            <p>Toute dépense enregistrée diminue automatiquement le solde de la caisse correspondante.</p>
+
+            <div class="form-card" style="margin-top: 20px; background: white; padding: 25px; border-radius: 8px;">
+                <h3>Enregistrer une dépense</h3>
+                <form id="form-depense" onsubmit="enregistrerDepense(event)" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label for="depense-caisse">Caisse débitée</label>
+                        <select id="depense-caisse" required class="form-control" style="width: 100%; padding: 10px;"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="depense-categorie">Catégorie</label>
+                        <select id="depense-categorie" required class="form-control" style="width: 100%; padding: 10px;">
+                            <option value="transport">Transport</option>
+                            <option value="restauration">Restauration</option>
+                            <option value="materiel">Matériel</option>
+                            <option value="ziara">Ziara</option>
+                            <option value="evenement">Événement</option>
+                            <option value="don">Don</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="depense-montant">Montant (FCFA)</label>
+                        <input type="number" id="depense-montant" required min="100" placeholder="ex: 15000" style="width: 100%; padding: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="depense-desc">Description / Motif</label>
+                        <input type="text" id="depense-desc" required placeholder="Précisez l'objet de la dépense..." style="width: 100%; padding: 10px;">
+                    </div>
+                    <button type="submit" class="btn-primary" style="background-color: #dc3545;">Enregistrer la dépense</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3>Historique des Dépenses</h3>
+                <div class="table-responsive" style="margin-top: 15px;">
+                    <table class="data-table" border="1" cellpadding="10" cellspacing="0" style="width: 100%; background: white;">
+                        <thead>
+                            <tr>
+                                <th>Date & Heure</th>
+                                <th>Caisse</th>
+                                <th>Catégorie</th>
+                                <th>Description</th>
+                                <th>Montant</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="liste-depenses-tbody">
+                            <!-- Rempli par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -267,6 +320,7 @@
     <script src="js/membres.js"></script>
     <script src="js/cotisations.js"></script>
     <script src="js/caisses.js"></script>
+    <script src="js/depenses.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/sessions.js"></script>
     <script src="js/app.js"></script>
