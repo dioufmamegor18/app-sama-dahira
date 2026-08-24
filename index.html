@@ -13,7 +13,7 @@
     <section id="connexion-section" class="app-section">
         <div class="login-container">
             <h1>SAMA DAHIRA</h1>
-            <p>Plateforme de gestion du Dahira</p>
+            <p>Plateforme de gestion des Dahira</p>
             <form id="login-form">
                 <div class="form-group">
                     <label for="login-identifier">Email (Responsable) ou Matricule (Membre)</label>
@@ -30,49 +30,90 @@
 
     <!-- 2. SECTION DASHBOARD -->
     <section id="dashboard-section" class="app-section" style="display: none;">
-        <h2>Tableau de bord</h2>
-        <p>Bienvenue sur le dashboard de gestion.</p>
-        <!-- Le contenu sera injecté dynamiquement par JavaScript -->
+        <div class="container">
+            <h2>Tableau de bord</h2>
+            <p>Bienvenue sur le dashboard de gestion.</p>
+            <!-- Le contenu sera injecté dynamiquement par JavaScript -->
+        </div>
     </section>
 
     <!-- 3. SECTION MEMBRES -->
     <section id="membres-section" class="app-section" style="display: none;">
-        <h2>Gestion des Membres</h2>
+        <div class="container">
+            <h2>Gestion des Membres</h2>
+            <div class="actions-bar">
+                <input type="text" id="search-membre" placeholder="Rechercher par nom, prénom ou matricule..." oninput="filtrerMembres()">
+                <button class="btn-primary" onclick="ouvrirModalMembre()">+ Ajouter un membre</button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Matricule</th>
+                            <th>Nom & Prénom</th>
+                            <th>Sexe</th>
+                            <th>Téléphone</th>
+                            <th>Date d'adhésion</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="liste-membres-tbody">
+                        <!-- Rempli dynamiquement par JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
 
     <!-- 4. SECTION COTISATIONS -->
     <section id="cotisations-section" class="app-section" style="display: none;">
-        <h2>Gestion des Cotisations</h2>
+        <div class="container">
+            <h2>Gestion des Cotisations</h2>
+        </div>
     </section>
 
     <!-- 5. SECTION CAISSES -->
     <section id="caisses-section" class="app-section" style="display: none;">
-        <h2>Gestion des Caisses</h2>
+        <div class="container">
+            <h2>Gestion des Caisses</h2>
+        </div>
     </section>
 
     <!-- 6. SECTION SESSIONS -->
     <section id="sessions-section" class="app-section" style="display: none;">
-        <h2>Gestion des Sessions</h2>
+        <div class="container">
+            <h2>Gestion des Sessions</h2>
+        </div>
     </section>
 
     <!-- 7. SECTION DÉPENSES -->
     <section id="depenses-section" class="app-section" style="display: none;">
-        <h2>Gestion des Dépenses</h2>
+        <div class="container">
+            <h2>Gestion des Dépenses</h2>
+        </div>
     </section>
 
     <!-- 8. SECTION ZIARA -->
     <section id="ziara-section" class="app-section" style="display: none;">
-        <h2>Gestion des Ziara</h2>
+        <div class="container">
+            <h2>Gestion des Ziara</h2>
+        </div>
     </section>
 
     <!-- 9. ÉVÉNEMENTS -->
     <section id="evenements-section" class="app-section" style="display: none;">
-        <h2>Gestion des Événements</h2>
+        <div class="container">
+            <h2>Gestion des Événements</h2>
+        </div>
     </section>
 
     <!-- 10. ESPACE MEMBRE -->
     <section id="espace-membre-section" class="app-section" style="display: none;">
-        <h2>Mon Espace Membre</h2>
+        <div class="container">
+            <h2>Mon Espace Membre</h2>
+        </div>
     </section>
 
     <!-- Inclusion des scripts JS modulaires (chargés à la fin du body) -->
