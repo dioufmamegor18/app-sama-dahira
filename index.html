@@ -429,7 +429,31 @@
         </div>
     </section>
 
-    <!-- 10. ESPACE MEMBRE -->
+    <!-- 10. SECTION RAPPORTS & EXPORTATION -->
+    <section id="rapports-section" class="app-section" style="display: none;">
+        <div class="container">
+            <h2>Rapports & États Financiers</h2>
+            <p>Générez et imprimez les bilans financiers officiels du Dahira.</p>
+
+            <div style="margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="imprimerBilanGeneral()" style="background-color: #1b4d3e; padding: 12px 20px; cursor: pointer;">
+                    🖨️ Imprimer le Bilan Général
+                </button>
+            </div>
+
+            <div id="zone-rapport" style="margin-top: 30px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div style="text-align: center; border-bottom: 2px solid #1b4d3e; padding-bottom: 15px; margin-bottom: 20px;">
+                    <h2>SAMA DAHIRA - RAPPORT FINANCIER OFFICIEL</h2>
+                    <p style="color: #666; margin-top: 5px;">État récapitulatif des recettes et des dépenses</p>
+                </div>
+                <div id="contenu-rapport-dynamique">
+                    <!-- Rempli dynamiquement par JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. ESPACE MEMBRE -->
     <section id="espace-membre-section" class="app-section" style="display: none;">
         <div class="container">
             <h2>Mon Espace Membre</h2>
@@ -445,6 +469,7 @@
     <script src="js/depenses.js"></script>
     <script src="js/ziara.js"></script>
     <script src="js/evenements.js"></script>
+    <script src="js/rapports.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/sessions.js"></script>
     <script src="js/app.js"></script>
