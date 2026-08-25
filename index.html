@@ -357,7 +357,52 @@
     <!-- 9. ÉVÉNEMENTS -->
     <section id="evenements-section" class="app-section" style="display: none;">
         <div class="container">
-            <h2>Gestion des Événements</h2>
+            <h2>Gestion des Événements & Activités</h2>
+            <p>Planifiez et suivez les grands rendez-vous du Dahira (Magal, Gamou, Conférences...).</p>
+
+            <div class="form-card" style="margin-top: 20px; background: white; padding: 25px; border-radius: 8px;">
+                <h3>Créer un événement</h3>
+                <form id="form-evenement" onsubmit="enregistrerEvenement(event)" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label for="evenement-titre">Titre de l'événement</label>
+                        <input type="text" id="evenement-titre" required placeholder="ex: Magal de Touba, Conférence annuelle..." style="width: 100%; padding: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="evenement-date">Date de l'événement</label>
+                        <input type="date" id="evenement-date" required style="width: 100%; padding: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="evenement-lieu">Lieu</label>
+                        <input type="text" id="evenement-lieu" required placeholder="ex: Mosquée de l'arrondissement..." style="width: 100%; padding: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="evenement-desc">Description / Objectifs</label>
+                        <textarea id="evenement-desc" rows="3" placeholder="Détails de l'événement..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" style="background-color: #1b4d3e;">Créer l'événement</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3>Liste des Événements</h3>
+                <div class="table-responsive" style="margin-top: 15px;">
+                    <table class="data-table" border="1" cellpadding="10" cellspacing="0" style="width: 100%; background: white;">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Titre</th>
+                                <th>Lieu</th>
+                                <th>Description</th>
+                                <th>Statut</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="liste-evenements-tbody">
+                            <!-- Rempli par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -376,6 +421,7 @@
     <script src="js/caisses.js"></script>
     <script src="js/depenses.js"></script>
     <script src="js/ziara.js"></script>
+    <script src="js/evenements.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/sessions.js"></script>
     <script src="js/app.js"></script>
