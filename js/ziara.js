@@ -1,29 +1,17 @@
 /**
- * Gestion des Ziara pour SAMA DAHIRA.
+ * ============================================================
+ *  ZIARA.JS — Visites pieuses : déplacement + hadiya
+ * ============================================================
+ *  Chaque Ziara distingue clairement les frais logistiques
+ *  (déplacement) du montant d'hadiya remis au dignitaire visité,
+ *  et génère automatiquement une dépense liée (catégorie "ziara")
+ *  qui impacte le solde de la caisse choisie.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    afficherZiaras();
-    initZiaraCaissesSelect();
-});
-
-/**
- * Remplit la liste déroulante des caisses pour le formulaire Ziara.
- */
 function initZiaraCaissesSelect() {
-    const select = document.getElementById('ziara-caisse');
-    if (!select) return;
-
-    const caisses = getData('caisses') || [];
-    select.innerHTML = '<option value="">-- Choisir une caisse --</option>';
-    caisses.forEach(caisse => {
-        select.innerHTML += `<option value="${caisse.nom}">${caisse.nom}</option>`;
-    });
+    remplirSelectCaisses('ziara-caisse');
 }
 
-/**
- * Enregistre une Ziara et sa sortie dans les dépenses globales.
- */
 function enregistrerZiara(e) {
     e.preventDefault();
 
@@ -31,79 +19,70 @@ function enregistrerZiara(e) {
     const lieu = document.getElementById('ziara-lieu').value.trim();
     const personne = document.getElementById('ziara-personne').value.trim();
     const fraisDeplacement = Number(document.getElementById('ziara-deplacement').value);
-    const montantRemis = Number(document.getElementById('ziara-remise').value);
-    const caisse = document.getElementById('ziara-caisse').value;
-    const totalSortie = fraisDeplacement + montantRemis;
-    const currentUser = sessionStorage.getItem('currentUser')
-        ? JSON.parse(sessionStorage.getItem('currentUser'))
-        : { nomComplet: 'Administrateur' };
-    const now = new Date();
+    const montantHadiya = Number(document.getElementById('ziara-hadiya').value);
+    const caisseId = Number(document.getElementById('ziara-caisse').value);
 
-    const nouvelleZiara = {
-        id: Date.now(),
-        date,
-        lieu,
-        personne,
-        fraisDeplacement,
-        montantRemis,
-        totalSortie,
-        caisse,
-        responsable: currentUser.nomComplet
-    };
+    if (!caisseId) { toast('Veuillez choisir une caisse à débiter.', 'erreur'); return; }
 
-    const ziaras = getData('ziaras') || [];
-    ziaras.push(nouvelleZiara);
-    saveData('ziaras', ziaras);
+    const totalSortie = fraisDeplacement + montantHadiya;
+    const currentUser = getCurrentUser() || { nomComplet: 'Responsable' };
 
-    const depenses = getData('depenses') || [];
-    depenses.push({
-        id: Date.now() + 1,
-        caisse,
-        categorie: 'ziara',
-        montant: totalSortie,
-        description: `Ziara à ${lieu} (${personne}) - Déplacement: ${fraisDeplacement}F, Hadaya: ${montantRemis}F`,
-        date,
-        heure: now.toTimeString().split(' ')[0].substring(0, 5),
+    const ziaras = getData(CLES_STOCKAGE.ZIARAS) || [];
+    ziaras.push({
+        id: prochainId(ziaras),
+        date, lieu, personne, fraisDeplacement, montantHadiya, totalSortie, caisseId,
         responsable: currentUser.nomComplet
     });
-    saveData('depenses', depenses);
+    saveData(CLES_STOCKAGE.ZIARAS, ziaras);
+
+    // Impact automatique sur la caisse via une dépense liée (traçabilité comprise)
+    const depenses = getData(CLES_STOCKAGE.DEPENSES) || [];
+    depenses.push({
+        id: prochainId(depenses),
+        caisseId,
+        categorie: 'ziara',
+        montant: totalSortie,
+        description: `Ziara à ${lieu} auprès de ${personne} — déplacement ${formaterMontant(fraisDeplacement)}, hadiya ${formaterMontant(montantHadiya)}`,
+        evenementId: null,
+        date,
+        heure: heureActuelle(),
+        responsable: currentUser.nomComplet
+    });
+    saveData(CLES_STOCKAGE.DEPENSES, depenses);
 
     document.getElementById('form-ziara').reset();
     initZiaraCaissesSelect();
     afficherZiaras();
-
-    if (typeof afficherCaisses === 'function') {
-        afficherCaisses();
-    }
-
-    alert(`Ziara enregistrée avec succès ! Total sortie : ${totalSortie.toLocaleString()} FCFA.`);
+    if (typeof afficherCaisses === 'function') afficherCaisses();
+    if (typeof afficherDepenses === 'function') afficherDepenses();
+    toast(`Ziara enregistrée — sortie totale de ${formaterMontant(totalSortie)}.`, 'succes');
 }
 
-/**
- * Affiche la liste des Ziara dans le tableau.
- */
 function afficherZiaras() {
     const tbody = document.getElementById('liste-ziaras-tbody');
     if (!tbody) return;
 
-    const ziaras = getData('ziaras') || [];
+    const ziaras = getData(CLES_STOCKAGE.ZIARAS) || [];
+    const caisses = getData(CLES_STOCKAGE.CAISSES) || [];
+    const nomCaisse = (id) => (caisses.find(c => c.id === id) || {}).nom || '—';
+
     tbody.innerHTML = '';
 
     if (ziaras.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">Aucune Ziara enregistrée.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="etat-vide">Aucune Ziara enregistrée.</td></tr>`;
         return;
     }
 
-    [...ziaras].reverse().forEach(ziara => {
+    [...ziaras].sort((a, b) => b.id - a.id).forEach(ziara => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${ziara.date}</td>
-            <td><strong>${ziara.lieu}</strong><br><small>auprès de ${ziara.personne}</small></td>
-            <td>${Number(ziara.fraisDeplacement).toLocaleString()} FCFA</td>
-            <td>${Number(ziara.montantRemis).toLocaleString()} FCFA</td>
-            <td><strong style="color: #dc3545;">${Number(ziara.totalSortie).toLocaleString()} FCFA</strong></td>
-            <td>${ziara.caisse}</td>
-            <td><small>${ziara.responsable}</small></td>
+            <td>${formaterDateFr(ziara.date)}</td>
+            <td><strong>${echapperHtml(ziara.lieu)}</strong><br><small class="texte-discret">auprès de ${echapperHtml(ziara.personne)}</small></td>
+            <td>${formaterMontant(ziara.fraisDeplacement)}</td>
+            <td>${formaterMontant(ziara.montantHadiya)}</td>
+            <td><strong class="texte-alerte">${formaterMontant(ziara.totalSortie)}</strong></td>
+            <td>${echapperHtml(nomCaisse(ziara.caisseId))}</td>
+            <td><small>${echapperHtml(ziara.responsable)}</small></td>
         `;
         tbody.appendChild(tr);
     });

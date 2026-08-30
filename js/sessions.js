@@ -1,99 +1,115 @@
 /**
- * Gestion des sessions pour SAMA DAHIRA.
+ * ============================================================
+ *  SESSIONS.JS — Gestion des sessions & objectifs financiers
+ * ============================================================
+ *  Une seule session peut être active à la fois. Les objectifs
+ *  annuels par sexe sont définis à la création de chaque session
+ *  (et modifiables ensuite), puis utilisés automatiquement pour
+ *  calculer le bilan de chaque membre (voir membres.js).
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    afficherSessions();
-});
-
-/**
- * Affiche la liste des sessions dans le tableau HTML.
- */
 function afficherSessions() {
     const tbody = document.getElementById('liste-sessions-tbody');
     if (!tbody) return;
 
-    const sessions = getData('sessions') || [];
+    const sessions = getData(CLES_STOCKAGE.SESSIONS) || [];
     tbody.innerHTML = '';
 
     if (sessions.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Aucune session enregistrée.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="etat-vide">Aucune session enregistrée.</td></tr>`;
         return;
     }
 
-    sessions.forEach(session => {
+    [...sessions].reverse().forEach(session => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><strong>${session.nom}</strong></td>
-            <td>${session.dateOuverture}</td>
-            <td>${session.dateFermeture}</td>
-            <td>
-                <span class="badge ${session.active ? 'badge-success' : 'badge-secondary'}" style="padding: 4px 8px; border-radius: 4px; background: ${session.active ? '#28a745' : '#6c757d'}; color: white;">
-                    ${session.active ? 'Active' : 'Fermée'}
-                </span>
-            </td>
-            <td>
-                ${!session.active ? `<button class="btn-sm" onclick="activerSession(${session.id})" style="padding: 5px 10px; background: #1b4d3e; color: white; border: none; border-radius: 4px; cursor: pointer;">Activer</button>` : '<em>En cours</em>'}
+            <td><strong>${echapperHtml(session.nom)}</strong></td>
+            <td>${formaterDateFr(session.dateOuverture)} → ${formaterDateFr(session.dateFermeture)}</td>
+            <td>${formaterMontant(session.objectifHomme)}</td>
+            <td>${formaterMontant(session.objectifFemme)}</td>
+            <td><span class="badge badge-${session.active ? 'succes' : 'neutre'}">${session.active ? 'Active' : 'Fermée'}</span></td>
+            <td class="cellule-actions">
+                <button class="btn-sm btn-info" onclick="ouvrirModalObjectifs(${session.id})">Objectifs</button>
+                ${!session.active ? `<button class="btn-sm btn-succes" onclick="activerSession(${session.id})">Activer</button>` : '<em class="texte-discret">En cours</em>'}
             </td>
         `;
         tbody.appendChild(tr);
     });
 }
 
-/**
- * Ajoute une nouvelle session et la définit comme active (en désactivant les autres).
- */
 function ajouterSession(e) {
     e.preventDefault();
 
     const nom = document.getElementById('session-nom').value.trim();
     const dateOuverture = document.getElementById('session-debut').value;
     const dateFermeture = document.getElementById('session-fin').value;
+    const objectifHomme = Number(document.getElementById('session-objectif-homme').value);
+    const objectifFemme = Number(document.getElementById('session-objectif-femme').value);
 
-    let sessions = getData('sessions') || [];
+    if (new Date(dateFermeture) < new Date(dateOuverture)) {
+        toast('La date de fermeture doit être postérieure à la date d\u2019ouverture.', 'erreur');
+        return;
+    }
 
-    // Désactiver toutes les sessions existantes puisqu'il ne peut y en avoir qu'une seule active
-    sessions.forEach(s => s.active = false);
+    const sessions = getData(CLES_STOCKAGE.SESSIONS) || [];
+    sessions.forEach(s => { s.active = false; });
 
-    // Créer la nouvelle session active
-    const nouvelleSession = {
-        id: Date.now(),
-        nom: nom,
-        dateOuverture: dateOuverture,
-        dateFermeture: dateFermeture,
-        active: true
-    };
-
-    sessions.push(nouvelleSession);
-    saveData('sessions', sessions);
-    
-    // Réinitialiser le formulaire
-    document.getElementById('form-session').reset();
-    
-    afficherSessions();
-    alert(`Session "${nom}" créée et activée avec succès !`);
-}
-
-/**
- * Permet de basculer l'état actif d'une session.
- */
-function activerSession(id) {
-    let sessions = getData('sessions') || [];
-
-    sessions.forEach(s => {
-        s.active = (s.id === id); // Active uniquement celle qui correspond à l'id cliqué
+    sessions.push({
+        id: prochainId(sessions),
+        nom, dateOuverture, dateFermeture,
+        active: true,
+        objectifHomme, objectifFemme
     });
+    saveData(CLES_STOCKAGE.SESSIONS, sessions);
 
-    saveData('sessions', sessions);
+    document.getElementById('form-session').reset();
     afficherSessions();
-    alert("La session active a été mise à jour.");
+    toast(`Session "${nom}" créée et activée.`, 'succes');
 }
 
-/**
- * Fonction utilitaire pour récupérer la session active actuelle.
- * @returns {object|null} La session active
- */
+function activerSession(id) {
+    const sessions = getData(CLES_STOCKAGE.SESSIONS) || [];
+    sessions.forEach(s => { s.active = (s.id === id); });
+    saveData(CLES_STOCKAGE.SESSIONS, sessions);
+    afficherSessions();
+    toast('Session active mise à jour.', 'succes');
+}
+
 function getActiveSession() {
-    const sessions = getData('sessions') || [];
+    const sessions = getData(CLES_STOCKAGE.SESSIONS) || [];
     return sessions.find(s => s.active) || null;
+}
+
+/* ---------- MODIFICATION DES OBJECTIFS D'UNE SESSION ---------- */
+
+function ouvrirModalObjectifs(id) {
+    const sessions = getData(CLES_STOCKAGE.SESSIONS) || [];
+    const session = sessions.find(s => s.id === id);
+    if (!session) return;
+
+    document.getElementById('objectifs-session-id').value = session.id;
+    document.getElementById('objectifs-session-titre').textContent = session.nom;
+    document.getElementById('objectifs-homme').value = session.objectifHomme;
+    document.getElementById('objectifs-femme').value = session.objectifFemme;
+    ouvrirModal('modal-objectifs-session');
+}
+
+function enregistrerObjectifsSession(e) {
+    e.preventDefault();
+
+    const id = Number(document.getElementById('objectifs-session-id').value);
+    const objectifHomme = Number(document.getElementById('objectifs-homme').value);
+    const objectifFemme = Number(document.getElementById('objectifs-femme').value);
+
+    const sessions = getData(CLES_STOCKAGE.SESSIONS) || [];
+    const index = sessions.findIndex(s => s.id === id);
+    if (index === -1) return;
+
+    sessions[index].objectifHomme = objectifHomme;
+    sessions[index].objectifFemme = objectifFemme;
+    saveData(CLES_STOCKAGE.SESSIONS, sessions);
+
+    fermerModal('modal-objectifs-session');
+    afficherSessions();
+    toast('Objectifs de la session mis à jour.', 'succes');
 }
